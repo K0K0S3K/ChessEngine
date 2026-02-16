@@ -12,7 +12,7 @@ int main() {
     
     Board board;
     // Ustawienie pozycji startowej
-    board.parseFEN("rnbqkbnr/ppppp2p/5p2/6p1/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 1");
+    board.parseFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
     string input;
     while (true) {
