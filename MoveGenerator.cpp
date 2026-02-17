@@ -436,34 +436,19 @@ std::vector<Move> generateMoves(const Board& board)
     generateMovesForPawns(board,moves,side);
 
     //knight
-    if(side == 0)
-        generateMovesForPiece(board,moves,side,N,knightMoves,([](int,uint64_t){return 0;}));
-    else if(side == 1)
-        generateMovesForPiece(board,moves,side,n,knightMoves,([](int,uint64_t){return 0;}));
+    generateMovesForPiece(board,moves,side,side==0?N:n,knightMoves,([](int,uint64_t){return 0;}));
 
     //rook
-    if(side == 0)
-        generateMovesForPiece(board,moves,side,R,zeros,calculateRookAttacks);
-    else if(side == 1)
-        generateMovesForPiece(board,moves,side,r,zeros,calculateRookAttacks);   
+    generateMovesForPiece(board,moves,side,side==0?R:r,zeros,calculateRookAttacks);
 
     //bishop
-    if(side == 0)
-        generateMovesForPiece(board,moves,side,B,zeros,calculateBishopAttacks);
-    else if(side == 1)
-        generateMovesForPiece(board,moves,side,b,zeros,calculateBishopAttacks);   
+    generateMovesForPiece(board,moves,side,side==0?B:b,zeros,calculateBishopAttacks);
 
     //queen
-    if(side == 0)
-        generateMovesForPiece(board,moves,side,Q,zeros,calculateQueenAttacks);
-    else if(side == 1)
-        generateMovesForPiece(board,moves,side,q,zeros,calculateQueenAttacks);   
+    generateMovesForPiece(board,moves,side,side==0?Q:q,zeros,calculateQueenAttacks);
 
     //king
-    if(side == 0)
-        generateMovesForPiece(board,moves,side,K,kingMoves,([](int,uint64_t){return 0;}));
-    else if(side == 1)
-        generateMovesForPiece(board,moves,side,k,kingMoves,([](int,uint64_t){return 0;}));   
+    generateMovesForPiece(board,moves,side,side==0?K:k,kingMoves,([](int,uint64_t){return 0;}));
 
     //roszady
     if (side == 0)
