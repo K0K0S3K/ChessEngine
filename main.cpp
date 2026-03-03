@@ -5,13 +5,11 @@
 
 using namespace std;
 
-
 int main() {
-    // Inicjalizacja tablic (skoczki i króle)
     initAll(); 
     
     Board board;
-    // Ustawienie pozycji startowej
+
     board.parseFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
     string input;
@@ -23,14 +21,14 @@ int main() {
         if (input == "exit") break;
 
         vector<Move> moves = generateMoves(board);
-        // Wykorzystujemy Twoją funkcję parseMove
+
         Move moveIdx = board.parseMove(input,moves);
         
         if (moveIdx.captured != -1) {
-            // Pobieramy ruchy ponownie, aby wyciągnąć ten konkretny     
-            board.makeMove(moveIdx); // Wykonanie ruchu
+     
+            board.makeMove(moveIdx);
             cout << "Wykonano ruch: " << input << endl;
-            // Informacja o turze i stanie króla
+
             int kingSq = __builtin_ctzll(board.pieceBB[board.sideToMove == 0 ? K : k]);
             bool check = isSquareAttacked(kingSq, 1 - board.sideToMove, board); 
             if (check) cout << " [SZACH!]";

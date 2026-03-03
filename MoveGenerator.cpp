@@ -26,8 +26,7 @@ void initAll()
     initKnights();
 }
 
-//BEGIN KNIGHT
-
+//SKOCZEK
 void generateMovesforKnight(uint64_t knightMoves[BOARD_SIZE])
 {
     enum Moves
@@ -63,11 +62,8 @@ void generateMovesforKnight(uint64_t knightMoves[BOARD_SIZE])
 
 }
 
-//END KNIGHT
 
-
-//BEGIN KING
-
+//KRÓL
 void generateMovesforKing(uint64_t kingMoves[BOARD_SIZE])
 {
     
@@ -91,9 +87,8 @@ void generateMovesforKing(uint64_t kingMoves[BOARD_SIZE])
         kingMoves[i] = moves;
     }
 }
-//END KING
 
-//BEGIN ROOK
+//WIEŻA
 uint64_t calculateRookAttacks(int sq, uint64_t occupancy)
 {
     uint64_t attacks = 0;
@@ -135,10 +130,8 @@ uint64_t calculateRookAttacks(int sq, uint64_t occupancy)
 
     return attacks;
 }
-//END ROOK
 
-
-//BEGIN BISHOP
+//GONIEC
 uint64_t calculateBishopAttacks(int sq, uint64_t occupancy)
 {
     uint64_t attacks = 0;
@@ -176,18 +169,14 @@ uint64_t calculateBishopAttacks(int sq, uint64_t occupancy)
 
     return attacks;
 }
-//END BISHOP
 
-//BEGIN QUEEN
-
+//KRÓLOWA
 uint64_t calculateQueenAttacks(int sq, uint64_t occupancy)
 {
     return (calculateBishopAttacks(sq,occupancy) | calculateRookAttacks(sq,occupancy));
 }
 
-//END QUEEN
-
-
+//GENERATOR RUCHÓW DLA FIGUR (Z WYJĄTKIEM PIONÓW)
 void generateMovesForPiece(const Board &board,std::vector<Move> &moves,bool side, int piece_id, uint64_t pieceMoves[], std::function<uint64_t(int, uint64_t)> calculatePieceAttacks)
 {
     uint64_t piece = board.pieceBB[piece_id];
@@ -219,6 +208,8 @@ void generateMovesForPiece(const Board &board,std::vector<Move> &moves,bool side
     
 }
 
+
+//GENERATOR RUCHÓW DLA PIONKÓW
 void generateMovesForPawns(const Board &board,std::vector<Move> &moves,bool side)
 {   
     uint64_t allPieces = board.occupancy[2];
@@ -232,7 +223,7 @@ void generateMovesForPawns(const Board &board,std::vector<Move> &moves,bool side
             int source = __builtin_ctzll(pawns);
             uint64_t sourceBit = (1ULL << source);
 
-            //forward move
+            //RUCH DO PRZODU
             int target = source + 8;
             if(target <= 63 && !(allPieces & (1ULL << target)))
             {
@@ -249,7 +240,7 @@ void generateMovesForPawns(const Board &board,std::vector<Move> &moves,bool side
                     moves.push_back(Move(source, target, P, 12, NO_FLAG));
                 }
 
-                //double jump
+                //RUCH DWA POLA DO PRZODU
                 if (0x000000000000FF00 & sourceBit)
                 {
                     int target2 = source + 16;
@@ -259,7 +250,7 @@ void generateMovesForPawns(const Board &board,std::vector<Move> &moves,bool side
 
             }
 
-            //right attack
+            //ATAK W PRAWO
             target = source + 9;
             if (target <= 63 && !(sourceBit & FILE_H) && (board.occupancy[1 - side] & (1ULL << target)))
             {
@@ -286,7 +277,7 @@ void generateMovesForPawns(const Board &board,std::vector<Move> &moves,bool side
                 }
             }
 
-            //left attack
+            //ATAK W LEWO
             target = source + 7;
             if (target <= 63 && !(sourceBit & FILE_A) && (board.occupancy[1 - side] & (1ULL << target)))
             {
@@ -326,7 +317,7 @@ void generateMovesForPawns(const Board &board,std::vector<Move> &moves,bool side
         }
         
     }
-    else if(side == 1)//black pawns
+    else if(side == 1)//CZARNE PIONKI
     {
         uint64_t pawns = board.pieceBB[p];
 
@@ -335,6 +326,7 @@ void generateMovesForPawns(const Board &board,std::vector<Move> &moves,bool side
             int source = __builtin_ctzll(pawns);
             uint64_t sourceBit = (1ULL << source);
 
+            //RUCH DO PRZODU
             int target = source - 8;
             if (target >= 0 && !(allPieces & (1ULL << target)))
             {
@@ -349,6 +341,7 @@ void generateMovesForPawns(const Board &board,std::vector<Move> &moves,bool side
                 {
                     moves.push_back(Move(source, target, p, 12, NO_FLAG));
 
+                    //RUCH DWA POLA DO PRZODU
                     if (0x00FF000000000000 & sourceBit)
                     {
                         int target2 = source - 16;
@@ -358,7 +351,7 @@ void generateMovesForPawns(const Board &board,std::vector<Move> &moves,bool side
                 }
             }
 
-            //left attack
+            //ATAK W LEWO
             target = source - 9;
             if (target >= 0 && !(sourceBit & FILE_A) && (board.occupancy[1 - side] & (1ULL << target)))
             {
@@ -385,7 +378,7 @@ void generateMovesForPawns(const Board &board,std::vector<Move> &moves,bool side
                 }
             }
 
-            //right attack
+            //ATAK W PRAWO
             target = source - 7;
             if (target >= 0 && !(sourceBit & FILE_H) && (board.occupancy[1 - side] & (1ULL << target)))
             {
@@ -432,40 +425,40 @@ std::vector<Move> generateMoves(const Board& board)
     int side = board.sideToMove;
     int enemy = 1 - side;
 
-    //pawns
+    //PIONKI
     generateMovesForPawns(board,moves,side);
 
-    //knight
+    //SKOCZEK
     if(side == 0)
         generateMovesForPiece(board,moves,side,N,knightMoves,([](int,uint64_t){return 0;}));
     else if(side == 1)
         generateMovesForPiece(board,moves,side,n,knightMoves,([](int,uint64_t){return 0;}));
 
-    //rook
+    //WIEŻA
     if(side == 0)
         generateMovesForPiece(board,moves,side,R,zeros,calculateRookAttacks);
     else if(side == 1)
         generateMovesForPiece(board,moves,side,r,zeros,calculateRookAttacks);   
 
-    //bishop
+    //GONIEC
     if(side == 0)
         generateMovesForPiece(board,moves,side,B,zeros,calculateBishopAttacks);
     else if(side == 1)
         generateMovesForPiece(board,moves,side,b,zeros,calculateBishopAttacks);   
 
-    //queen
+    //KRÓLOWA
     if(side == 0)
         generateMovesForPiece(board,moves,side,Q,zeros,calculateQueenAttacks);
     else if(side == 1)
         generateMovesForPiece(board,moves,side,q,zeros,calculateQueenAttacks);   
 
-    //king
+    //KRÓL
     if(side == 0)
         generateMovesForPiece(board,moves,side,K,kingMoves,([](int,uint64_t){return 0;}));
     else if(side == 1)
         generateMovesForPiece(board,moves,side,k,kingMoves,([](int,uint64_t){return 0;}));   
 
-    //roszady
+    //ROSZADA
     if (side == 0)
     {
         // Krótka roszada (Białe)
@@ -525,38 +518,35 @@ std::vector<Move> generateMoves(const Board& board)
 }   
 
 bool isSquareAttacked(int sq, int side, const Board& board) {
-    // 1. Ataki PIONKÓW
-    // Jeśli atakującym jest BIAŁY, szukamy białych pionków poniżej pola sq
+    //Ataki PIONKÓW
     if (side == 0) {
-        if (sq >= 8) { // Pionki nie mogą atakować z 1. rzędu
+        if (sq >= 8) { 
             if (!( (1ULL << sq) & FILE_A ) && (board.pieceBB[P] & (1ULL << (sq - 9)))) return true;
             if (!( (1ULL << sq) & FILE_H ) && (board.pieceBB[P] & (1ULL << (sq - 7)))) return true;
         }
     } 
-    // Jeśli atakującym jest CZARNY, szukamy czarnych pionków powyżej pola sq
+    
     else {
-        if (sq <= 55) { // Pionki nie mogą atakować z 8. rzędu
+        if (sq <= 55) {
             if (!( (1ULL << sq) & FILE_H ) && (board.pieceBB[p] & (1ULL << (sq + 9)))) return true;
             if (!( (1ULL << sq) & FILE_A ) && (board.pieceBB[p] & (1ULL << (sq + 7)))) return true;
         }
     }
 
-    // 2. Ataki SKOCZKÓW
-    // Wykorzystujemy symetrię: jeśli skoczek z 'sq' atakuje skoczka przeciwnika, 
-    // to ten skoczek przeciwnika atakuje 'sq'.
+    //Ataki SKOCZKÓW
     uint64_t knights = (side == 0) ? board.pieceBB[N] : board.pieceBB[n];
     if (knightMoves[sq] & knights) return true;
 
-    // 3. Ataki KRÓLA
+    //Ataki KRÓLA
     uint64_t king = (side == 0) ? board.pieceBB[K] : board.pieceBB[k];
     if (kingMoves[sq] & king) return true;
 
-    // 4. Ataki GOŃCÓW i HETMANÓW (Przekątne)
+    //Ataki GOŃCÓW i HETMANÓW (Linie ukośne)
     uint64_t bishops = (side == 0) ? board.pieceBB[B] : board.pieceBB[b];
     uint64_t queens = (side == 0) ? board.pieceBB[Q] : board.pieceBB[q];
     if (calculateBishopAttacks(sq, board.occupancy[2]) & (bishops | queens)) return true;
 
-    // 5. Ataki WIEŻ i HETMANÓW (Linie proste)
+    //Ataki WIEŻ i HETMANÓW (Linie proste)
     uint64_t rooks = (side == 0) ? board.pieceBB[R] : board.pieceBB[r];
     if (calculateRookAttacks(sq, board.occupancy[2]) & (rooks | queens)) return true;
 
@@ -567,7 +557,7 @@ bool isMoveLegal(Move m, Board& board) {
     int us = board.sideToMove;
     board.makeMove(m);
     
-    // Po makeMove strona się zmieniła, więc szukamy króla strony, która WŁAŚNIE się ruszyła
+    // Po makeMove strona się zmieniła, więc szukamy króla strony, która właśnie się ruszyła
     int kingSq = __builtin_ctzll(board.pieceBB[us == 0 ? K : k]);
     
     // Sprawdzamy, czy przeciwnik (teraz board.sideToMove) atakuje naszego króla
@@ -582,6 +572,7 @@ int getGameResult(Board &board,const std::vector<Move> &moves)
     
     int i = 0;
 
+    //sprawdzamy czy jakikolwiek ruch jest legalny, jeśli tak to gra się toczy
     for(const auto &move : moves)
     {   
         if(isMoveLegal(move,board))
@@ -592,6 +583,7 @@ int getGameResult(Board &board,const std::vector<Move> &moves)
 
     int king = 0;
 
+    //nie ma legalnych ruchów, sprawdzamy czy król jest atakowany, jeśli tak to mat, jeśli nie to pat
     if(board.sideToMove == WHITE_TURN)
     {
         if(board.pieceBB[K] != 0 && isSquareAttacked(__builtin_ctzll(board.pieceBB[K]), BLACK_TURN, board))
@@ -620,6 +612,3 @@ int getGameResult(Board &board,const std::vector<Move> &moves)
 
     
 }
-
-//0 - 16 ok
-//17 - 

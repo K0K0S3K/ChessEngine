@@ -49,7 +49,7 @@ void Board::parseFEN(std::string fen) {
         } else if (isdigit(fen[i])) {
             file += (fen[i] - '0');
         } else {
-            // Mapowanie znaków na nasze enumy
+            // Mapowanie znaków na enumy
             std::map<char, int> charToPiece = {
                 {'P', P}, {'N', N}, {'B', B}, {'R', R}, {'Q', Q}, {'K', K},
                 {'p', p}, {'n', n}, {'b', b}, {'r', r}, {'q', q}, {'k', k}
@@ -65,7 +65,7 @@ void Board::parseFEN(std::string fen) {
     i++; // Pomiń spację
     sideToMove = (fen[i] == 'w') ? 0 : 1;
 
-    // 3. Roszady (opcjonalnie na teraz, ale warto mieć)
+    // 3. Roszady 
     i += 2;
     while (fen[i] != ' ') {
         if (fen[i] == 'K') castleRights |= 1;
@@ -251,7 +251,6 @@ void Board::drawBoard() {
 Move Board::parseMove(std::string moveStr, std::vector<Move> &moves) {
     if (moveStr.length() < 4) return Move(-1,-1,-1,-1,-1);
 
-    // Pobierz wszystkie ruchy (w tym te sprawdzające legalność)
     int f_col = tolower(moveStr[0]) - 'a';
     int f_row = moveStr[1] - '1';
     int t_col = tolower(moveStr[2]) - 'a';
@@ -279,5 +278,3 @@ Move Board::parseMove(std::string moveStr, std::vector<Move> &moves) {
     }
     return Move(-1,-1,-1,-1,-1);
 }
-
-//c2c3 h7h6 d1a4 h8h7 a4d7
