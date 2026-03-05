@@ -1,6 +1,6 @@
-#include "Board.h"
-#include "Move.h"
-#include "MoveGenerator.h"
+#include "../include/Board.h"
+#include "../include/Move.h"
+#include "../include/MoveGenerator.h"
 #include <map>
 
 const int castlingUpdate[64] = {

@@ -1,6 +1,6 @@
-#include "EnemyPlayer.h"
-#include "MoveGenerator.h"
-#include "Board.h"
+#include "../include/EnemyPlayer.h"
+#include "../include/MoveGenerator.h"
+#include "../include/Board.h"
 #include <vector>
 #include <iostream>
 

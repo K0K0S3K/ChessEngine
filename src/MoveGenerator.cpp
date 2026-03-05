@@ -1,10 +1,10 @@
 #include <iostream>
 #include <cstdint>
 #include <functional>
-#include "Board.h"
-#include "Move.h"
+#include "../include/Board.h"
+#include "../include/Move.h"
 #include <vector>
-#include "MoveGenerator.h"
+#include "../include/MoveGenerator.h"
 
 uint64_t knightMoves[64];
 uint64_t kingMoves[64];

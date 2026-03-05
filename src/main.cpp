@@ -1,8 +1,8 @@
 #include <string>
 #include <cctype>
-#include "MoveGenerator.h"
-#include "Board.h"
-#include "EnemyPlayer.h"
+#include "../include/MoveGenerator.h"
+#include "../include/Board.h"
+#include "../include/EnemyPlayer.h"
 
 using namespace std;
 
