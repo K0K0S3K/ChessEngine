@@ -9,9 +9,8 @@ Wydajny silnik szachowy napisany od podstaw w C++, skupiający się na szybkośc
 ## 🚀 Kluczowe Funkcje
 
 * **Bitboard Engine:** Reprezentacja planszy oparta na 64-bitowych liczbach całkowitych dla maksymalnej wydajności.
-* **Algorytm Search:** Implementacja Alpha-Beta Pruning z Iterative Deepening.
-* **Move Generation:** Szybki generator ruchów (Legal Move Generator) wspierający roszady i bicia w przelocie.
-* **Zobrist Hashing:** Unikalna identyfikacja pozycji dla tablic transpozycji.
+* **Algorytm Search:** Implementacja algorytmu minimax (w planach rozszerzenie go o Alpha-Beta Pruning)
+* **Move Generation:** Szybki generator ruchów wspierający roszady i bicia w przelocie.
 
 ## 🛠️ Architektura Projektu
 
@@ -19,8 +18,7 @@ Projekt został podzielony na logiczne moduły, aby zapewnić łatwą rozbudowę
 
 * `Board`: Zarządzanie stanem gry i bitboardami.
 * `MoveGen`: Logika generowania i walidacji ruchów.
-* `Search`: Algorytmy sztucznej inteligencji i ocena pozycji.
-* `UCI`: Interfejs komunikacyjny zgodny z protokołem Universal Chess Interface.
+* `EnemyPlayer`: Algorytmy decyzyjne (minimax) i ocena pozycji.
 
 ## 🏗️ Kompilacja i Uruchomienie
 
@@ -43,3 +41,4 @@ cmake --build . --config Release
 
 # Uruchom silnik
 ./ChessEngine
+
