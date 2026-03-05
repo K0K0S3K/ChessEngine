@@ -607,8 +607,4 @@ int getGameResult(Board &board,const std::vector<Move> &moves)
             return STALEMATE;
         }
     }
-
-    
-
-    
 }
