@@ -1,5 +1,7 @@
 #include "Board.h"
 
+const int depth = 4;
+
 enum ShannonValues {PAWN_VALUE = 100, KNIGHT_VALUE = 320, BISHOP_VALUE = 330, ROOK_VALUE = 500, QUEEN_VALUE = 900, KING_VALUE = 20000};
 
 const int knightPST[64] = {
@@ -71,3 +73,5 @@ const int queenPST[64] = {
 int shannonFunction(const Board& board);
 int PSTeval(uint64_t piece, const int pstTable[], Turn side);
 int evaluate(const Board &board);
+int minimax(Board &board, int depth, bool isMaximizing);
+void enemyMove(Board &board, Turn turn);
