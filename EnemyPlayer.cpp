@@ -55,25 +55,32 @@ int evaluate(const Board &board)
     score += PSTeval(board.pieceBB[K],kingPST,WHITE_TURN);
     score += PSTeval(board.pieceBB[B],bishopPST,WHITE_TURN);
 
-    score -= PSTeval(board.pieceBB[p],pawnPST,BLACK_TURN);
-    score -= PSTeval(board.pieceBB[r],rookPST,BLACK_TURN);
-    score -= PSTeval(board.pieceBB[q],queenPST,BLACK_TURN);
-    score -= PSTeval(board.pieceBB[n],knightPST,BLACK_TURN);
-    score -= PSTeval(board.pieceBB[k],kingPST,BLACK_TURN);
-    score -= PSTeval(board.pieceBB[b],bishopPST,BLACK_TURN);
+    score += PSTeval(board.pieceBB[p],pawnPST,BLACK_TURN);
+    score += PSTeval(board.pieceBB[r],rookPST,BLACK_TURN);
+    score += PSTeval(board.pieceBB[q],queenPST,BLACK_TURN);
+    score += PSTeval(board.pieceBB[n],knightPST,BLACK_TURN);
+    score += PSTeval(board.pieceBB[k],kingPST,BLACK_TURN);
+    score += PSTeval(board.pieceBB[b],bishopPST,BLACK_TURN);
     
     return score;
 }
 
 int minimax(Board &board, int depth, bool isMaximizing)
 {
-
     if(depth == 0)
     {
         return evaluate(board);
     }
 
     vector<Move> moves = generateMoves(board);
+
+    int result = getGameResult(board, moves);
+
+    if (result != IN_PROGRESS) {
+        if (result == WHITE_WINS) return 999999 + depth;
+        if (result == BLACK_WINS) return -999999 - depth;
+        return 0;
+    }
 
     if(isMaximizing)
     {
@@ -98,7 +105,7 @@ int minimax(Board &board, int depth, bool isMaximizing)
             if(isMoveLegal(move, board))
             {
                 board.makeMove(move);
-                int eval = minimax(board,depth - 1, true);
+                int eval = minimax(board,depth, true);
                 board.unmakeMove(move);
                 minEval = min(minEval,eval);
             }

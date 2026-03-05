@@ -65,9 +65,32 @@ int main() {
         else
         {   
             enemyMove(board,BLACK_TURN);
-        }
 
-        
+            int kingSq = __builtin_ctzll(board.pieceBB[board.sideToMove == 0 ? K : k]);
+            bool check = isSquareAttacked(kingSq, 1 - board.sideToMove, board);
+            if (check)
+                cout << " [SZACH!] ";
+            int status = getGameResult(board, generateMoves(board));
+
+            if (status == STALEMATE)
+            {
+                cout << "KONIEC GRY!! PAT";
+                board.drawBoard();
+                return 0;
+            }
+            else if (status == BLACK_WINS)
+            {
+                cout << "I MAT, KONIEC GRY!! CZARNY WYGRYWA";
+                board.drawBoard();
+                return 0;
+            }
+            else if (status == WHITE_WINS)
+            {
+                cout << "I MAT, KONIEC GRY!! BIAŁY WYGRYWA";
+                board.drawBoard();
+                return 0;
+            }
+        }
     }
 
     return 0;
