@@ -20,26 +20,5 @@ Projekt został podzielony na logiczne moduły, aby zapewnić łatwą rozbudowę
 * `MoveGen`: Logika generowania i walidacji ruchów.
 * `EnemyPlayer`: Algorytmy decyzyjne (minimax) i ocena pozycji.
 
-## 🏗️ Kompilacja i Uruchomienie
-
-Projekt wykorzystuje **CMake**, co pozwala na łatwą kompilację na wielu platformach.
-
-### Wymagania
-* Kompilator wspierający C++17 (np. GCC 9+, Clang 10+, MSVC 2019+)
-* CMake 3.15+
-
-### Instrukcja
-```bash
-# Sklonuj repozytorium
-git clone [https://github.com/K0K0S3K/ChessEngine.git](https://github.com/K0K0S3K/ChessEngine.git)
-cd ChessEngine
-
-# Skonfiguruj i zbuduj projekt
-mkdir build && cd build
-cmake ..
-cmake --build . --config Release
-
-# Uruchom silnik
-./ChessEngine
 
 
