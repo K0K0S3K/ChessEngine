@@ -1,4 +1,4 @@
-# ♟️ K0K0S3K Chess Engine
+# ♟️ C++ Chess Engine
 
 [![C++ Standard](https://img.shields.io/badge/C%2B%2B-17%2F20-blue.svg)](https://en.cppreference.com/w/cpp/language/history)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -41,4 +41,5 @@ cmake --build . --config Release
 
 # Uruchom silnik
 ./ChessEngine
+
 
