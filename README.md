@@ -36,7 +36,7 @@ cd ChessEngine
 # Skonfiguruj i zbuduj projekt
 mkdir build && cd build
 cmake ..
-cmake --build . --config Release
+cmake --build .
 
 # Uruchom silnik
 ./ChessEngine
