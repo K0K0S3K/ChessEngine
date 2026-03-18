@@ -30,19 +30,13 @@ Projekt wykorzystuje **CMake**, co pozwala na łatwą kompilację na wielu platf
 ### Instrukcja
 ```bash
 # Sklonuj repozytorium
-
 git clone https://github.com/K0K0S3K/ChessEngine.git
-
 cd ChessEngine
 
 # Skonfiguruj i zbuduj projekt
-
 mkdir build && cd build
 cmake ..
 cmake --build . --config Release
 
 # Uruchom silnik
 ./ChessEngine
-
-
-
