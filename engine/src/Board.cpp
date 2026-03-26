@@ -38,7 +38,7 @@ void Board::updateOccupancy() {
 
 void Board::parseFEN(std::string fen) {
     clear();
-    int rank = 7; // Zacznij od 8 rzędu
+    int rank = 7; 
     int file = 0;
     int i = 0;
 
@@ -49,7 +49,7 @@ void Board::parseFEN(std::string fen) {
         } else if (isdigit(fen[i])) {
             file += (fen[i] - '0');
         } else {
-            // Mapowanie znaków na enumy
+           
             std::map<char, int> charToPiece = {
                 {'P', P}, {'N', N}, {'B', B}, {'R', R}, {'Q', Q}, {'K', K},
                 {'p', p}, {'n', n}, {'b', b}, {'r', r}, {'q', q}, {'k', k}
@@ -60,9 +60,7 @@ void Board::parseFEN(std::string fen) {
         }
         i++;
     }
-
-    // 2. Kto ma ruch
-    i++; // Pomiń spację
+    i++;
     sideToMove = (fen[i] == 'w') ? 0 : 1;
 
     // 3. Roszady 
@@ -77,8 +75,8 @@ void Board::parseFEN(std::string fen) {
     }
 
     while (fen[i] != ' ')
-        i++; // Przeskocz do kolejnej spacji
-    i++;     // Wejdź na znak pola EP
+        i++; 
+    i++;     
 
     if (fen[i] != '-')
     {
@@ -260,7 +258,6 @@ Move Board::parseMove(std::string moveStr, std::vector<Move> &moves) {
     int toSquare = t_row * 8 + t_col;
 
     for (int i = 0; i < moves.size(); i++) {
-        // Sprawdzamy tylko ruchy, które nie zostawiają króla pod szachem
         Board tempBoard = *this;
         if (!isMoveLegal(moves[i], tempBoard)) continue;
 

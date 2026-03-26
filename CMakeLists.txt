@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(include)
 
 # Automatyczne znalezienie wszystkich plików źródłowych
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "engine/src/*.cpp")
 
 # Tworzenie pliku wykonywalnego
 add_executable(ChessEngine ${SOURCES})
