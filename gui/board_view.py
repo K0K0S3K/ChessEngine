@@ -1,36 +1,80 @@
 import pygame
-from enum import Enum
 import os
-
-class Pieces(Enum):
-    WHITE_PAWN = 0
-    WHITE_KNIGHT = 1
-    WHITE_BISHOP = 2
-    WHITE_ROOK = 3
-    WHITE_QUEEN =  4
-    WHITE_KING = 5
-    BLACK_PAWN = 6
-    BLACK_KNIGHT = 7
-    BLACK_BISHOP = 8
-    BLACK_ROOK = 9
-    BLACK_QUEEN = 10
-    BLACK_KING = 11
-
-class Side(Enum):
-    WHITE = 0
-    BLACK = 1
+from data import *
 
 def load_piece(name, size):
     path = os.path.join("./gui/assets", f"{name}.png")
     image = pygame.image.load(path).convert_alpha()
     return pygame.transform.smoothscale(image, (size, size))
 
+class StartGameButton:
+    def __init__(self, center_pos, width, height, text, color, font):
+        self.rect = pygame.Rect(0, 0, width, height)
+        self.rect.center = center_pos
+        self.color = color
+        
+        self.text_surf = font.render(text, True, (255, 255, 255))
+        self.text_rect = self.text_surf.get_rect(center=self.rect.center)
+
+    def draw(self, display):
+        pygame.draw.rect(display, self.color, self.rect, border_radius=8)
+        display.blit(self.text_surf, self.text_rect)
+
+    def is_clicked(self, mouse_pos):
+        return self.rect.collidepoint(mouse_pos)
+        
+
+class Text:
+    def __init__(self, text, font, color, center_pos):
+        self.surface = font.render(text, True, color)
+        self.rect = self.surface.get_rect(center=center_pos)
+    
+    def print_text(self, display):
+        display.blit(self.surface, self.rect)
+    
 
 class Board:
     def __init__(self,side,tile_size,margin):
         self.side = side
         self.tile_size = tile_size
         self.margin = margin
+
+        self.window_size = WINDOW_SIZE
+        mid_x = WINDOW_SIZE // 2
+        
+        chess_text_font = pygame.font.SysFont('Arial', 80, bold=True)
+        author_text_font = pygame.font.SysFont('Arial', 20)
+        button_font = pygame.font.SysFont('Arial', 32)
+
+        self.chess_text = Text("Szachy", chess_text_font, (255, 255, 255), (mid_x, 150))
+
+        
+        buttons_y = 300 
+        button_w, button_h = 220, 60
+        spacing = 130 
+
+        self.btn_white = StartGameButton(
+            center_pos=(mid_x - spacing, buttons_y),
+            width=button_w, height=button_h,
+            text="Graj Białymi", color=(80, 80, 80), font=button_font
+        )
+
+        self.btn_black = StartGameButton(
+            center_pos=(mid_x + spacing, buttons_y),
+            width=button_w, height=button_h,
+            text="Graj Czarnymi", color=(30, 30, 30), font=button_font
+        )
+
+        author_h = author_text_font.get_height()
+        self.author_text = Text(
+            "author: Adam Kwiatkowski", 
+            author_text_font, 
+            (200, 200, 200), 
+            (10 + 115, WINDOW_SIZE - author_h) 
+        )
+
+
+
 
         self.pieces = {
             Pieces.WHITE_PAWN : load_piece('pawn-w',tile_size),
@@ -48,65 +92,67 @@ class Board:
             Pieces.BLACK_KING : load_piece('king-b',tile_size)
         }
 
-        self.fen_to_piece = {
-            'P': Pieces.WHITE_PAWN, 'N': Pieces.WHITE_KNIGHT, 'B': Pieces.WHITE_BISHOP,
-            'R': Pieces.WHITE_ROOK, 'Q': Pieces.WHITE_QUEEN, 'K': Pieces.WHITE_KING,
-            'p': Pieces.BLACK_PAWN, 'n': Pieces.BLACK_KNIGHT, 'b': Pieces.BLACK_BISHOP,
-            'r': Pieces.BLACK_ROOK, 'q': Pieces.BLACK_QUEEN, 'k': Pieces.BLACK_KING
-        }
+    def display_menu(self,display : pygame.surface.Surface):
 
-    def display_menu(self):
-        pass
+        display.fill(background)
+
+        top = WINDOW_SIZE - 350
+        left = 65
+        p_size = 120
+
+    
+        pieces = [Pieces.BLACK_KING,Pieces.WHITE_QUEEN,Pieces.BLACK_BISHOP,Pieces.WHITE_KNIGHT,Pieces.BLACK_ROOK,Pieces.WHITE_PAWN]
+
+        for piece in pieces:
+            img = self.pieces.get(piece)
+            img = pygame.transform.smoothscale(img,(p_size,p_size))
+
+            if img:
+                display.blit(img, (left,top))
+                left += p_size
+
+        self.btn_black.draw(display)
+        self.btn_white.draw(display)
+        self.author_text.print_text(display)
+        self.chess_text.print_text(display)
+        
 
     def print_board(self,display):
 
-        white = (232, 207, 182)
-        black = (161, 113, 92)
-        background = (42, 42, 42)
-        tile_size = self.tile_size
         col = True
-        margin = self.margin
         
         display.fill(background)
 
         for i in range(64):
 
-            left = margin + (i % 8) * tile_size
-            top = margin + 700 - (i//8)*tile_size
+            left = self.margin + (i % 8) * self.tile_size
+            top = self.margin + 7 * self.tile_size - (i//8)*self.tile_size
 
             if col:
-                pygame.draw.rect(surface=display,color=black,rect=pygame.Rect(left,top,tile_size,tile_size))
+                pygame.draw.rect(surface=display,color=black,rect=pygame.Rect(left,top,self.tile_size,self.tile_size))
             else:
-                pygame.draw.rect(surface=display,color=white,rect=pygame.Rect(left,top,tile_size,tile_size))
+                pygame.draw.rect(surface=display,color=white,rect=pygame.Rect(left,top,self.tile_size,self.tile_size))
 
             if i % 8 != 7:
                 col = not col
             
 
-    def print_pieces(self,FEN_string,display):
+    def print_pieces(self,display,pieces_arrangement):
 
-        board_layout = FEN_string.split(' ')[0]
-        rows = board_layout.split('/')
-        
-        for row_index, row in enumerate(rows):
-            col_index = 0
-            for char in row:
-                if char.isdigit():
-                    col_index += int(char)
-                else:
-                    x = col_index * self.tile_size + self.margin
-                    y = row_index * self.tile_size + self.margin
-                    
-                    image = self.pieces.get(self.fen_to_piece.get(char))
+        for i, piece in enumerate(pieces_arrangement):
+
+            if piece != Pieces.EMPTY:
+                left = self.margin + (i % 8) * self.tile_size
+                top = self.margin + 7*self.tile_size - (i//8)*self.tile_size
+
+                image = self.pieces.get(piece)
             
-                    if image:
-                        display.blit(image, (x, y))
-                    
-                    col_index += 1
+                if image:
+                    display.blit(image, (left, top))
 
-    def display_game(self,display,FEN_string):
+    def display_game(self,display,pieces_arrangement):
         self.print_board(display)
-        self.print_pieces(FEN_string,display)
+        self.print_pieces(display,pieces_arrangement)
 
     def display_endgame(self):
         pass
