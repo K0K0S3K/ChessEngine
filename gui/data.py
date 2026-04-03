@@ -1,6 +1,7 @@
 from enum import Enum
+from enum import IntEnum
 
-class Pieces(Enum):
+class Pieces(IntEnum):
     WHITE_PAWN = 0
     WHITE_KNIGHT = 1
     WHITE_BISHOP = 2

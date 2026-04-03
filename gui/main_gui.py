@@ -20,14 +20,14 @@ class App:
 
         self.pieces_data = []
         self._board = Board(Side.WHITE,TILE_SIZE,MARGIN)
-        self._engine = Engine()
+        self._engine = Engine('./engine/src/main')
         
 
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
 
-        if event.type ==pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN:
 
             if self._state == GameState.MENU:
 
@@ -42,6 +42,14 @@ class App:
                         self._side = Side.BLACK
                         self._state = GameState.IN_PROGRESS
 
+            elif self._state == GameState.IN_PROGRESS:
+
+                if event.button == 1:
+                    mouse_pos = pygame.mouse.get_pos()
+
+                if self._board.clicked_on_players_piece(mouse_pos,self.pieces_data,self._side):
+                    pass
+
     def on_cleanup(self):
         pygame.quit()
 
@@ -55,7 +63,8 @@ class App:
             if self._state == GameState.MENU:
                 self._board.display_menu(self.display)
             elif self._state == GameState.IN_PROGRESS:
-                self._board.display_game(self.display,self._engine.get_pieces_arrangement(self._side))
+                self.pieces_data = self._engine.get_pieces_arrangement()
+                self._board.display_game(self.display,self.pieces_data,self._side)
             elif self._state == GameState.END:
                 self._board.display_endgame()
 

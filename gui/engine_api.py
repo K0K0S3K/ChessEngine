@@ -1,20 +1,21 @@
 from data import *
+import subprocess
+import os
+
 
 class Engine():
 
-    def __init__(self):
+    def __init__(self, path_to_exe):
         pass
+
 
     def get_fen(self) -> str:
         return "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     
-    def get_pieces_arrangement(self,side):
+    def get_pieces_arrangement(self):
         fen = self.get_fen()
 
-        if(side == Side.WHITE):
-            fen = fen[0:fen.find(' ')][::-1]
-        else:
-            fen = fen[0:fen.find(' ')]
+        fen = fen[0:fen.find(' ')][::-1]
 
         arrangement = []
 

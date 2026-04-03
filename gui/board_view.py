@@ -137,22 +137,49 @@ class Board:
                 col = not col
             
 
-    def print_pieces(self,display,pieces_arrangement):
+    def print_pieces(self,display,pieces_arrangement,side):
 
         for i, piece in enumerate(pieces_arrangement):
 
             if piece != Pieces.EMPTY:
-                left = self.margin + (i % 8) * self.tile_size
-                top = self.margin + 7*self.tile_size - (i//8)*self.tile_size
+
+                
+                if side == Side.WHITE:
+                    left = self.margin + (i % 8) * self.tile_size
+                    top = self.margin + 7*self.tile_size - (i//8)*self.tile_size
+                else:
+                    left = self.margin + (7 - (i % 8)) * self.tile_size
+                    top = self.margin + (i // 8) * self.tile_size
+                
 
                 image = self.pieces.get(piece)
             
                 if image:
                     display.blit(image, (left, top))
 
-    def display_game(self,display,pieces_arrangement):
+    def clicked_on_players_piece(self,mouse_pos,pieces,side):
+        
+        left = mouse_pos[0] - 25
+        top = mouse_pos[1] - 25
+
+        top = (((8 * TILE_SIZE) - top) // TILE_SIZE)
+        left = left // 100
+
+        tile = left + top*8
+        
+        if side == Side.WHITE:
+            if Pieces.WHITE_PAWN <= pieces[tile] and pieces[tile] <= Pieces.WHITE_KING:
+                print(pieces[tile])
+        else:
+            if Pieces.BLACK_PAWN <= pieces[tile] and pieces[tile] <= Pieces.BLACK_KING:
+                print(pieces[tile])
+            
+            
+
+
+    def display_game(self,display,pieces_arrangement,side):
         self.print_board(display)
-        self.print_pieces(display,pieces_arrangement)
+        self.print_pieces(display,pieces_arrangement,side)
 
     def display_endgame(self):
         pass
