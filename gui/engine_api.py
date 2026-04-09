@@ -4,16 +4,30 @@ import os
 
 
 class Engine():
-
     def __init__(self, path_to_exe):
-        pass
+        self.process = subprocess.Popen(
+            path_to_exe,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            bufsize=1 # Line buffering
+        )
+        self.send_command("uci")
+        line = self.process.stdout.readline().strip()
+        print(line)
 
+        self.fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
-    def get_fen(self) -> str:
-        return "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    def send_command(self, cmd):
+        self.process.stdin.write(f"{cmd}\n")
+        self.process.stdin.flush()
+
+    def set_fen(self,arrangement):
+        self.fen = "x"
     
     def get_pieces_arrangement(self):
-        fen = self.get_fen()
+        fen = self.fen
 
         fen = fen[0:fen.find(' ')][::-1]
 

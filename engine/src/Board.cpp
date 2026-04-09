@@ -23,7 +23,7 @@ Board::Board()
 void Board::clear() {
     for(int i = 0; i < 12; i++) pieceBB[i] = 0ULL;
     for(int i = 0; i < 3; i++) occupancy[i] = 0ULL;
-    sideToMove = 0;
+    sideToMove = WHITE_TURN;
     enPassant = -1;
     castleRights = 0;
     gameState = IN_PROGRESS;
@@ -61,7 +61,7 @@ void Board::parseFEN(std::string fen) {
         i++;
     }
     i++;
-    sideToMove = (fen[i] == 'w') ? 0 : 1;
+    sideToMove = (fen[i] == 'w') ? WHITE_TURN : BLACK_TURN;
 
     // 3. Roszady 
     i += 2;
@@ -184,12 +184,14 @@ void Board::makeMove(Move move)
     castleRights &= castlingUpdate[move.source];
     castleRights &= castlingUpdate[move.target];
 
-    sideToMove = 1 - sideToMove;
+    sideToMove = (sideToMove == WHITE_TURN) ? BLACK_TURN : WHITE_TURN;
+    
     updateOccupancy();
 }
 
 void Board::unmakeMove(Move m) {
-    sideToMove = 1 - sideToMove;
+    sideToMove = (sideToMove == WHITE_TURN) ? BLACK_TURN : WHITE_TURN;
+    
     uint64_t fromBit = (1ULL << m.source);
     uint64_t toBit = (1ULL << m.target);
     
@@ -274,4 +276,44 @@ Move Board::parseMove(std::string moveStr, std::vector<Move> &moves) {
         }
     }
     return Move(-1,-1,-1,-1,-1);
+}
+
+std::string Board::generateFEN() const {
+    std::string fen = "";
+
+    for (int row = 7; row >= 0; --row) {
+        int emptySquares = 0;
+        for (int col = 0; col < 8; ++col) {
+            int sq = row * 8 + col;
+            uint64_t bit = (1ULL << sq);
+            char pieceChar = 0;
+
+            if (pieceBB[P] & bit) pieceChar = 'P';
+            else if (pieceBB[N] & bit) pieceChar = 'N';
+            else if (pieceBB[B] & bit) pieceChar = 'B';
+            else if (pieceBB[R] & bit) pieceChar = 'R';
+            else if (pieceBB[Q] & bit) pieceChar = 'Q';
+            else if (pieceBB[K] & bit) pieceChar = 'K';
+            else if (pieceBB[p] & bit) pieceChar = 'p';
+            else if (pieceBB[n] & bit) pieceChar = 'n';
+            else if (pieceBB[b] & bit) pieceChar = 'b';
+            else if (pieceBB[r] & bit) pieceChar = 'r';
+            else if (pieceBB[q] & bit) pieceChar = 'q';
+            else if (pieceBB[k] & bit) pieceChar = 'k';
+
+            if (pieceChar == 0) {
+                emptySquares++;
+            } else {
+                if (emptySquares > 0) {
+                    fen += std::to_string(emptySquares);
+                    emptySquares = 0;
+                }
+                fen += pieceChar;
+            }
+        }
+        if (emptySquares > 0) fen += std::to_string(emptySquares);
+        if (row > 0) fen += '/';
+    }
+
+    return fen;
 }

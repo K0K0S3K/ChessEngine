@@ -34,8 +34,7 @@ class Text:
     
 
 class Board:
-    def __init__(self,side,tile_size,margin):
-        self.side = side
+    def __init__(self,tile_size,margin):
         self.tile_size = tile_size
         self.margin = margin
 
@@ -143,7 +142,6 @@ class Board:
 
             if piece != Pieces.EMPTY:
 
-                
                 if side == Side.WHITE:
                     left = self.margin + (i % 8) * self.tile_size
                     top = self.margin + 7*self.tile_size - (i//8)*self.tile_size
@@ -157,7 +155,23 @@ class Board:
                 if image:
                     display.blit(image, (left, top))
 
-    def clicked_on_players_piece(self,mouse_pos,pieces,side):
+    def print_legalMoves(self,display,moves,side):
+        
+        for i in moves:
+
+            if side == Side.WHITE:
+                left = self.margin + (i % 8) * self.tile_size
+                top = self.margin + 7*self.tile_size - (i//8)*self.tile_size
+            else:
+                left = self.margin + (7 - (i % 8)) * self.tile_size
+                top = self.margin + (i // 8) * self.tile_size
+            
+            pygame.draw.circle(surface=display,color=grey,center=(left + (self.tile_size//2),top + (self.tile_size//2)),radius=(self.tile_size//5))
+
+            
+
+
+    def clicked_on_players_piece(self,mouse_pos,pieces,side,pieceUp):
         
         left = mouse_pos[0] - 25
         top = mouse_pos[1] - 25
@@ -169,16 +183,24 @@ class Board:
         
         if side == Side.WHITE:
             if Pieces.WHITE_PAWN <= pieces[tile] and pieces[tile] <= Pieces.WHITE_KING:
-                print(pieces[tile])
+                print(tile)
+                return (True,tile)
         else:
+            tile = 63 - tile
             if Pieces.BLACK_PAWN <= pieces[tile] and pieces[tile] <= Pieces.BLACK_KING:
-                print(pieces[tile])
+                print(tile)
+                return (True,tile)
             
+        if pieceUp == Pieces.EMPTY:
+            return (False,tile)
+        else:
+            return (True,tile)
+
+        
             
-
-
-    def display_game(self,display,pieces_arrangement,side):
+    def display_game(self,display,pieces_arrangement,side,legalMoves):
         self.print_board(display)
+        self.print_legalMoves(display,legalMoves,side)
         self.print_pieces(display,pieces_arrangement,side)
 
     def display_endgame(self):

@@ -23,7 +23,7 @@ public:
     uint64_t pieceBB[12];    // Bitboardy dla każdej figury
     uint64_t occupancy[3];   // [0] - BIAŁE, [1] - CZARNE, [2] - WSZYSTKIE
 
-    int sideToMove;          // 0 (Białe), 1 (Czarne)
+    Turn sideToMove;          // 0 (Białe), 1 (Czarne)
     int enPassant;           // Indeks pola (0-63) lub -1
     int castleRights;        // Flagi: 1(WK), 2(WQ), 4(BK), 8(BQ)
     int gameState;           // IN_PROGRESS, WHITE_WINS, BLACK_WINS, STALEMATE
@@ -36,4 +36,5 @@ public:
     void unmakeMove(Move m);
     void drawBoard();
     Move parseMove(std::string moveStr, std::vector<Move> &moves);
+    std::string generateFEN() const;
 };

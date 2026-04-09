@@ -17,10 +17,13 @@ class App:
         self.size = self.width, self.height = WINDOW_WIDTH, WINDOW_HEIGHT 
         pygame.init()
         self.display = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
-
+        self._board = Board(TILE_SIZE,MARGIN)
         self.pieces_data = []
-        self._board = Board(Side.WHITE,TILE_SIZE,MARGIN)
         self._engine = Engine('./engine/src/main')
+
+        self._pieceUp = Pieces.EMPTY
+        self._pieceSrc = -1
+        self._legal_moves_for_clicked_tile = []
         
 
     def on_event(self, event):
@@ -47,15 +50,32 @@ class App:
                 if event.button == 1:
                     mouse_pos = pygame.mouse.get_pos()
 
-                if self._board.clicked_on_players_piece(mouse_pos,self.pieces_data,self._side):
-                    pass
+                click = self._board.clicked_on_players_piece(mouse_pos,self.pieces_data,self._side,self._pieceUp)
+
+                if click[0] and self._pieceUp == Pieces.EMPTY:
+                    self._pieceUp = self.pieces_data[click[1]]
+                    self.pieces_data[click[1]] = Pieces.EMPTY
+                    self._pieceSrc = click[1]
+                    #self._legal_moves_for_clicked_tile = self._engine.send_command(f"getmoves {click[1]}")
+                    self._engine.send_command(f"getmoves {click[1]}")
+                    self._legal_moves_for_clicked_tile = [48,40,32]
+                elif click[0] and self.pieces_data[click[1]] == Pieces.EMPTY and click[1] in self._legal_moves_for_clicked_tile:
+                    self.pieces_data[click[1]] = self._pieceUp
+                    self._pieceUp = Pieces.EMPTY
+                    self._legal_moves_for_clicked_tile = []
+                    if click[1] != self._pieceSrc:
+                        #self._engine.send_command(f"move {self._pieceSrc}-{click[1]}")
+                        print(f"move {self._pieceSrc}-{click[1]}")
+                    
 
     def on_cleanup(self):
         pygame.quit()
 
  
     def on_execute(self):
-        
+
+        self.pieces_data = self._engine.get_pieces_arrangement()
+
         while self._running:
             for event in pygame.event.get():
                 self.on_event(event)
@@ -63,8 +83,8 @@ class App:
             if self._state == GameState.MENU:
                 self._board.display_menu(self.display)
             elif self._state == GameState.IN_PROGRESS:
-                self.pieces_data = self._engine.get_pieces_arrangement()
-                self._board.display_game(self.display,self.pieces_data,self._side)
+                
+                self._board.display_game(self.display,self.pieces_data,self._side,self._legal_moves_for_clicked_tile)
             elif self._state == GameState.END:
                 self._board.display_endgame()
 

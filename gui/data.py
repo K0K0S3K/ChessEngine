@@ -19,6 +19,7 @@ class Pieces(IntEnum):
 white = (232, 207, 182)
 black = (161, 113, 92)
 background = (42, 42, 42)
+grey = (140, 130, 129)
 
 class Side(Enum):
     WHITE = 0
