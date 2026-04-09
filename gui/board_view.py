@@ -155,8 +155,10 @@ class Board:
                 if image:
                     display.blit(image, (left, top))
 
-    def print_legalMoves(self,display,moves,side):
+    def print_legalMoves(self,display,moves,side,src,arrangement):
         
+        pygame.draw.rect(surface=display,color=grey,rect=pygame.Rect(self.margin + (src % 8) * self.tile_size,self.margin + 7*self.tile_size - (src//8)*self.tile_size,self.tile_size,self.tile_size))
+
         for i in moves:
 
             if side == Side.WHITE:
@@ -166,7 +168,14 @@ class Board:
                 left = self.margin + (7 - (i % 8)) * self.tile_size
                 top = self.margin + (i // 8) * self.tile_size
             
-            pygame.draw.circle(surface=display,color=grey,center=(left + (self.tile_size//2),top + (self.tile_size//2)),radius=(self.tile_size//5))
+            if arrangement[i] == Pieces.EMPTY:
+                pygame.draw.circle(surface=display,color=grey,center=(left + (self.tile_size//2),top + (self.tile_size//2)),radius=(self.tile_size//5))
+
+            if side == Side.WHITE and Pieces.BLACK_PAWN <= arrangement[i] and arrangement[i] <= Pieces.BLACK_KING:
+                pygame.draw.rect(surface=display,color=red,rect=pygame.Rect(left,top,self.tile_size,self.tile_size))
+
+            if side == Side.BLACK and Pieces.WHITE_PAWN <= arrangement[i] and arrangement[i] <= Pieces.WHITE_KING:
+                pygame.draw.rect(surface=display,color=red,rect=pygame.Rect(left,top,self.tile_size,self.tile_size))
 
             
 
@@ -198,9 +207,9 @@ class Board:
 
         
             
-    def display_game(self,display,pieces_arrangement,side,legalMoves):
+    def display_game(self,display,pieces_arrangement,side,legalMoves,src):
         self.print_board(display)
-        self.print_legalMoves(display,legalMoves,side)
+        self.print_legalMoves(display,legalMoves,side,src,pieces_arrangement)
         self.print_pieces(display,pieces_arrangement,side)
 
     def display_endgame(self):

@@ -14,10 +14,12 @@ class Engine():
             bufsize=1 # Line buffering
         )
         self.send_command("uci")
-        line = self.process.stdout.readline().strip()
-        print(line)
-
-        self.fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        print(self.process.stdout.readline().strip())
+        self.send_command("position startpos")
+        self.send_command("getfen")
+        
+        self.fen = self.process.stdout.readline().strip()
+        print(self.fen)
 
     def send_command(self, cmd):
         self.process.stdin.write(f"{cmd}\n")
@@ -29,7 +31,7 @@ class Engine():
     def get_pieces_arrangement(self):
         fen = self.fen
 
-        fen = fen[0:fen.find(' ')][::-1]
+        fen = fen[::-1]
 
         arrangement = []
 
@@ -46,6 +48,9 @@ class Engine():
             elif str.isalpha(piece):
                 arrangement.append(fen_to_piece.get(piece))
                 i += 1
+
+        for i in range(0,64,8):
+            arrangement[0+i:8+i] = arrangement[0+i:8+i][::-1]
 
         return arrangement
 

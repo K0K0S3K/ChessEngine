@@ -90,7 +90,6 @@ int main() {
             case Command::GETMOVES: {
                 int source;
                 if (is >> source) {
-                    cout << "moves: ";
 
                     for(const auto mv : moves)
                     {
@@ -98,19 +97,19 @@ int main() {
                         {
                             if(isMoveLegal(mv,board))
                             {
-                                cout << mv.source << "-" << mv.target;
+                                cout << mv.target << " ";
                             }
                         }
                     }
 
-                    cout << '\n';
+                    cout << endl;
 
                 }
                 break;
             }
 
             case Command::GETFEN:
-                cout << board.generateFEN() << '\n';
+                cout << board.generateFEN() << endl;
                 break;
 
             case Command::QUIT:

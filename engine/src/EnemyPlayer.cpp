@@ -149,5 +149,5 @@ void enemyMove(Board &board, Turn turn)
 
     board.makeMove(bestMove);
 
-    cout << "bestmove " << bestMove.source << "-" << bestMove.target << '\n';
+    cout << "bestmove " << bestMove.source << "-" << bestMove.target << endl;
 }
