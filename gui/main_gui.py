@@ -45,47 +45,53 @@ class App:
                         self._side = Side.BLACK
                         self._state = GameState.IN_PROGRESS
 
+                        self._board.display_game(self.display,self.pieces_data,self._side,self._legal_moves_for_clicked_tile,self._pieceSrc)
+                            
+                        print(self._engine.send_command("go"))
+
+                        self._engine.getfen()
+                            
+                        self.pieces_data = self._engine.get_pieces_arrangement()
+
+
             elif self._state == GameState.IN_PROGRESS:
 
                 if event.button == 1:
                     mouse_pos = pygame.mouse.get_pos()
 
                 click = self._board.clicked_on_players_piece(mouse_pos,self.pieces_data,self._side,self._pieceUp)
+                print(click[1])
 
                 if click[0] and self._pieceUp == Pieces.EMPTY:
                     self._pieceUp = self.pieces_data[click[1]]
                     self.pieces_data[click[1]] = Pieces.EMPTY
                     self._pieceSrc = click[1]
 
-                    self._engine.send_command(f"getmoves {click[1]}")
-                    mvs = self._engine.process.stdout.readline().strip()
-                    print(mvs)
+                    self._legal_moves_for_clicked_tile = [int(m) for m in self._engine.send_command(f"getmoves {click[1]}").split()]
 
-                    mvs = [int(m) for m in mvs.split()]
-
-                    self._legal_moves_for_clicked_tile = mvs
                 elif click[0] and click[1] in self._legal_moves_for_clicked_tile or click[1] == self._pieceSrc:
                     self.pieces_data[click[1]] = self._pieceUp
                     self._pieceUp = Pieces.EMPTY
                     self._legal_moves_for_clicked_tile = []
                     if click[1] != self._pieceSrc:
-                        self._engine.send_command(f"position {self._pieceSrc}-{click[1]}")
-                        print(f"move {self._pieceSrc}-{click[1]}")
-                        self._engine.send_command("getfen")
-                        f = self._engine.process.stdout.readline().strip()
 
-                        print(f)
-                        self._engine.fen = f
+                        
+                        self._engine.getfen()
+
+                        a = (self._engine.send_command(f"position {self._pieceSrc}-{click[1]}"))
+                        print(a)
+
                         self.pieces_data = self._engine.get_pieces_arrangement()
                         self._pieceSrc = -200
+
                         self._board.display_game(self.display,self.pieces_data,self._side,self._legal_moves_for_clicked_tile,self._pieceSrc)
-                        self._engine.send_command("go")
-                        res = self._engine.process.stdout.readline().strip()
-                        print(res)
-                        self._engine.send_command("getfen")
-                        self._engine.fen = self._engine.process.stdout.readline().strip()
-                        print(self._engine.fen)
+                            
+                        print(self._engine.send_command("go"))
+
+                        self._engine.getfen()
+                            
                         self.pieces_data = self._engine.get_pieces_arrangement()
+                        
                     else:
                         self._pieceSrc = -200
 

@@ -13,21 +13,25 @@ class Engine():
             text=True,
             bufsize=1 # Line buffering
         )
-        self.send_command("uci")
-        print(self.process.stdout.readline().strip())
-        self.send_command("position startpos")
-        self.send_command("getfen")
-        
-        self.fen = self.process.stdout.readline().strip()
-        print(self.fen)
+        self.fen = ""
+        out = self.send_command("uci")
+        print(out)
+        print(self.send_command("position startpos"))
+        self.getfen()      
 
     def send_command(self, cmd):
         self.process.stdin.write(f"{cmd}\n")
         self.process.stdin.flush()
 
-    def set_fen(self,arrangement):
-        self.fen = "x"
+        out = self.process.stdout.readline().strip()
+
+        return out
+
+
+    def getfen(self):
+        self.fen = self.send_command("getfen")
     
+
     def get_pieces_arrangement(self):
         fen = self.fen
 

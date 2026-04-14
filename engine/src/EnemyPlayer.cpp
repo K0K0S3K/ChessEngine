@@ -120,6 +120,7 @@ int minimax(Board &board, int depth, bool isMaximizing)
 
 void enemyMove(Board &board, Turn turn)
 {
+    
     vector<Move> moves = generateMoves(board);
 
     Move bestMove = Move(0,0,0,0);
@@ -149,5 +150,38 @@ void enemyMove(Board &board, Turn turn)
 
     board.makeMove(bestMove);
 
-    cout << "bestmove " << bestMove.source << "-" << bestMove.target << endl;
+    //cout << "bestmove " << bestMove.source << "-" << bestMove.target << endl;
+}
+
+
+void enemyMove(Board &board, Turn turn, vector<Move> moves)
+{
+    Move bestMove = Move(0,0,0,0);
+    int bestValue = (turn == WHITE_TURN) ? -999999 : 999999;
+
+    for(const auto &move : moves)
+    {
+        if(isMoveLegal(move,board))
+        {
+            board.makeMove(move);
+            int val = minimax(board, depth - 1, (turn == BLACK_TURN));
+            board.unmakeMove(move);
+
+            if(turn == WHITE_TURN) {
+                if(val > bestValue) {
+                    bestValue = val;
+                    bestMove = move;
+                }
+            } else {
+                if(val < bestValue) {
+                    bestValue = val;
+                    bestMove = move;
+                }
+            }
+        }
+    }
+
+    board.makeMove(bestMove);
+
+    //cout << "bestmove " << bestMove.source << "-" << bestMove.target << endl;
 }

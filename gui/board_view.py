@@ -157,8 +157,12 @@ class Board:
 
     def print_legalMoves(self,display,moves,side,src,arrangement):
         
-        pygame.draw.rect(surface=display,color=grey,rect=pygame.Rect(self.margin + (src % 8) * self.tile_size,self.margin + 7*self.tile_size - (src//8)*self.tile_size,self.tile_size,self.tile_size))
+        if side == Side.WHITE:
+            pygame.draw.rect(surface=display,color=grey,rect=pygame.Rect(self.margin + (src % 8) * self.tile_size,self.margin + 7*self.tile_size - (src//8)*self.tile_size,self.tile_size,self.tile_size))
+        else:
+            pygame.draw.rect(surface=display,color=grey,rect=pygame.Rect(self.margin + (7-(src % 8)) * self.tile_size,self.margin + (src // 8)*self.tile_size, self.tile_size,self.tile_size))
 
+        
         for i in moves:
 
             if side == Side.WHITE:
@@ -192,12 +196,12 @@ class Board:
         
         if side == Side.WHITE:
             if Pieces.WHITE_PAWN <= pieces[tile] and pieces[tile] <= Pieces.WHITE_KING:
-                print(tile)
+                #print(tile)
                 return (True,tile)
         else:
             tile = 63 - tile
             if Pieces.BLACK_PAWN <= pieces[tile] and pieces[tile] <= Pieces.BLACK_KING:
-                print(tile)
+                #print(tile)
                 return (True,tile)
             
         if pieceUp == Pieces.EMPTY:

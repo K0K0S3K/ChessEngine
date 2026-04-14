@@ -30,6 +30,35 @@ Command hashCommand(const std::string& cmd) {
     return Command::UNKNOWN;
 }
 
+void printGameResult(Board &board, vector<Move> moves)
+{
+    int state = getGameResult(board, moves);
+
+    switch (state)
+    {
+        case GameResult::IN_PROGRESS:
+            cout << "IN_PROGRESS" << endl;
+            break;
+
+        case GameResult::WHITE_WINS:
+            cout << "WHITE_WIN" << endl;
+            break;
+
+        case GameResult::BLACK_WINS:
+            cout << "BLACK_WINS" << endl;
+            break;
+
+        case GameResult::STALEMATE:
+            cout << "STALEMATE" << endl;
+            break;
+
+        default:
+            cout << "OK" << endl;
+            break;
+        }
+}
+
+
 int main() {
     initAll(); 
     
@@ -61,6 +90,7 @@ int main() {
                 is >> arg;
                 if (arg == "startpos") {
                     board.parseFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+                    cout << "startpos ok" << endl;
                 } else {
                     size_t dashPos = arg.find('-');
                     if (dashPos != std::string::npos) {
@@ -72,18 +102,26 @@ int main() {
                             if(mv.source == from && mv.target == to)
                             {
                                 board.makeMove(mv);
+                                moves = generateMoves(board);
+                                
+                                printGameResult(board,moves);
+
                                 break;
                             }
                         }
                         
                     }
+                    
                 }
                 break;
+
+                
             }
 
             case Command::GO: {
-                enemyMove(board,board.sideToMove);
+                enemyMove(board,board.sideToMove,moves);
                 moves = generateMoves(board);
+                printGameResult(board,moves);
                 break;
             }
 
