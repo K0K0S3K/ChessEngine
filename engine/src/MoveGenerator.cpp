@@ -572,6 +572,8 @@ int getGameResult(Board &board,const std::vector<Move> &moves)
     
     int i = 0;
 
+    bool other_than_king = false;
+
     //sprawdzamy czy jakikolwiek ruch jest legalny, jeśli tak to gra się toczy
     for(const auto &move : moves)
     {   
@@ -580,6 +582,9 @@ int getGameResult(Board &board,const std::vector<Move> &moves)
             return IN_PROGRESS;
         }
     }
+
+    //if(!other_than_king)
+        //return STALEMATE;
 
     int king = 0;
 

@@ -1,10 +1,6 @@
 from board_view import *
 from engine_api import *
 
-class GameState(Enum):
-    MENU = 0
-    IN_PROGRESS = 1
-    END = 2
 
 class App:
     def __init__(self,WINDOW_WIDTH,WINDOW_HEIGHT):
@@ -20,6 +16,8 @@ class App:
         self._board = Board(TILE_SIZE,MARGIN)
         self.pieces_data = []
         self._engine = Engine('./engine/src/main')
+
+        self._statemsg = ""
 
         self._pieceUp = Pieces.EMPTY
         self._pieceSrc = -200
@@ -75,23 +73,21 @@ class App:
                     self._legal_moves_for_clicked_tile = []
                     if click[1] != self._pieceSrc:
 
-                        
-                        self._engine.getfen()
+                        self.pieces_data, self._statemsg = self._engine.playerMove(self._pieceSrc,click[1])
 
-                        a = (self._engine.send_command(f"position {self._pieceSrc}-{click[1]}"))
-                        print(a)
-
-                        self.pieces_data = self._engine.get_pieces_arrangement()
                         self._pieceSrc = -200
 
-                        self._board.display_game(self.display,self.pieces_data,self._side,self._legal_moves_for_clicked_tile,self._pieceSrc)
-                            
-                        print(self._engine.send_command("go"))
+                        self._state = self._engine.evalState(self._statemsg)
 
-                        self._engine.getfen()
+                        self._board.display_game(self.display,self.pieces_data,self._side,self._legal_moves_for_clicked_tile,self._pieceSrc)
+
+                        if self._state != GameState.END:
                             
-                        self.pieces_data = self._engine.get_pieces_arrangement()
-                        
+                            self.pieces_data, self._statemsg = self._engine.engineMove()
+
+                            self._state = self._engine.evalState(self._statemsg)
+                            
+                                                    
                     else:
                         self._pieceSrc = -200
 
@@ -121,7 +117,7 @@ class App:
                     self.display.blit(image, (mouse_pos[0] - TILE_SIZE // 2, mouse_pos[1] - TILE_SIZE // 2))
 
             elif self._state == GameState.END:
-                self._board.display_endgame()
+                self._board.display_endgame(self.display,self.pieces_data,self._side,self._statemsg)
 
             pygame.display.flip()
 

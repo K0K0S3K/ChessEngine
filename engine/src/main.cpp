@@ -41,7 +41,7 @@ void printGameResult(Board &board, vector<Move> moves)
             break;
 
         case GameResult::WHITE_WINS:
-            cout << "WHITE_WIN" << endl;
+            cout << "WHITE_WINS" << endl;
             break;
 
         case GameResult::BLACK_WINS:
@@ -65,7 +65,6 @@ int main() {
     Board board;
 
     board.parseFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-
     std::string line, cmd;
 
     vector<Move> moves = generateMoves(board);
@@ -90,6 +89,7 @@ int main() {
                 is >> arg;
                 if (arg == "startpos") {
                     board.parseFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+                    moves = generateMoves(board);
                     cout << "startpos ok" << endl;
                 } else {
                     size_t dashPos = arg.find('-');

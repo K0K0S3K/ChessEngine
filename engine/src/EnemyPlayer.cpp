@@ -105,7 +105,7 @@ int minimax(Board &board, int depth, bool isMaximizing)
             if(isMoveLegal(move, board))
             {
                 board.makeMove(move);
-                int eval = minimax(board,depth, true);
+                int eval = minimax(board,depth - 1, true);
                 board.unmakeMove(move);
                 minEval = min(minEval,eval);
             }
@@ -131,7 +131,7 @@ void enemyMove(Board &board, Turn turn)
         if(isMoveLegal(move,board))
         {
             board.makeMove(move);
-            int val = minimax(board, depth - 1, (turn == BLACK_TURN));
+            int val = minimax(board, DEPTH, (turn == BLACK_TURN));
             board.unmakeMove(move);
 
             if(turn == WHITE_TURN) {
@@ -164,7 +164,7 @@ void enemyMove(Board &board, Turn turn, vector<Move> moves)
         if(isMoveLegal(move,board))
         {
             board.makeMove(move);
-            int val = minimax(board, depth - 1, (turn == BLACK_TURN));
+            int val = minimax(board, DEPTH, (turn == BLACK_TURN));
             board.unmakeMove(move);
 
             if(turn == WHITE_TURN) {

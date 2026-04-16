@@ -1,6 +1,12 @@
 from enum import Enum
 from enum import IntEnum
 
+class GameState(Enum):
+    MENU = 0
+    IN_PROGRESS = 1
+    END = 2
+
+
 class Pieces(IntEnum):
     WHITE_PAWN = 0
     WHITE_KNIGHT = 1

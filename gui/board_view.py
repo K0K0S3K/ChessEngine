@@ -46,7 +46,6 @@ class Board:
         button_font = pygame.font.SysFont('Arial', 32)
 
         self.chess_text = Text("Szachy", chess_text_font, (255, 255, 255), (mid_x, 150))
-
         
         buttons_y = 300 
         button_w, button_h = 220, 60
@@ -65,6 +64,7 @@ class Board:
         )
 
         author_h = author_text_font.get_height()
+
         self.author_text = Text(
             "author: Adam Kwiatkowski", 
             author_text_font, 
@@ -216,5 +216,14 @@ class Board:
         self.print_legalMoves(display,legalMoves,side,src,pieces_arrangement)
         self.print_pieces(display,pieces_arrangement,side)
 
-    def display_endgame(self):
-        pass
+    def display_endgame(self,display,pieces_arrangement,side,msg):
+        self.print_board(display)
+        self.print_pieces(display,pieces_arrangement,side)
+
+        self.bg_text = Text(msg, pygame.font.SysFont('Arial',102,bold=True), grey, (WINDOW_SIZE//2, WINDOW_SIZE//2))
+        self.endgame_text = Text(msg, pygame.font.SysFont('Arial',98,bold=True), (255, 255, 255), (WINDOW_SIZE//2, WINDOW_SIZE//2))
+
+        self.bg_text.print_text(display)
+        self.endgame_text.print_text(display)
+        
+        

@@ -11,7 +11,7 @@ class Engine():
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            bufsize=1 # Line buffering
+            bufsize=1
         )
         self.fen = ""
         out = self.send_command("uci")
@@ -31,9 +31,32 @@ class Engine():
     def getfen(self):
         self.fen = self.send_command("getfen")
     
+    def playerMove(self,src,trgt):
+        state = self.send_command(f"position {src}-{trgt}")
+        pieces_data = self.get_pieces_arrangement()
+        src = -200
+
+        return pieces_data, state
+
+    def engineMove(self):
+        state = self.send_command("go")
+        pieces_data = self.get_pieces_arrangement()
+
+        return pieces_data, state
+
+    def evalState(self,stateData):
+        if stateData == "IN_PROGRESS" or stateData == "OK":
+            return GameState.IN_PROGRESS
+        elif stateData == "WHITE_WINS" or stateData == "BLACK_WINS" or stateData == "STALEMATE":
+            return GameState.END
+
+
+
 
     def get_pieces_arrangement(self):
-        fen = self.fen
+        self.getfen()
+
+        fen = self.fen    
 
         fen = fen[::-1]
 

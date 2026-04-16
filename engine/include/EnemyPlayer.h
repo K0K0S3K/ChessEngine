@@ -1,6 +1,6 @@
 #include "Board.h"
 #include <vector>
-const int depth =3;
+const int DEPTH =3;
 
 enum ShannonValues {PAWN_VALUE = 100, KNIGHT_VALUE = 320, BISHOP_VALUE = 330, ROOK_VALUE = 500, QUEEN_VALUE = 900, KING_VALUE = 200000000};
 
