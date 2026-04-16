@@ -11,6 +11,7 @@ Wydajny silnik szachowy napisany od podstaw w C++, skupiający się na szybkośc
 * **Bitboard Engine:** Reprezentacja planszy oparta na 64-bitowych liczbach całkowitych dla maksymalnej wydajności.
 * **Algorytm Search:** Implementacja algorytmu minimax (w planach rozszerzenie go o Alpha-Beta Pruning)
 * **Move Generation:** Szybki generator ruchów wspierający roszady i bicia w przelocie.
+* **Graficzny Interfejs Użytkownika (GUI):** Aplikacja w Pythonie (Pygame) pozwalająca na grę przeciwko silnikowi w czasie rzeczywistym.
 
 ## 🛠️ Architektura Projektu
 
@@ -19,13 +20,15 @@ Projekt został podzielony na logiczne moduły, aby zapewnić łatwą rozbudowę
 * `Board`: Zarządzanie stanem gry i bitboardami.
 * `MoveGen`: Logika generowania i walidacji ruchów.
 * `EnemyPlayer`: Algorytmy decyzyjne (minimax) i ocena pozycji.
+* `gui/`: Interfejs graficzny który uruchamia silnik jako subprocess i komunikuje się z nim za pomocą prostego API
 
 ## 🏗️ Kompilacja i Uruchomienie
-Projekt wykorzystuje **CMake**, co pozwala na łatwą kompilację na wielu platformach.
+Projekt wykorzystuje **CMake**, co pozwala na łatwą kompilację na wielu platformach. Projekt składa się z silnika **C++** oraz interfejsu graficznego **Python**. Aby zagrać, należy najpierw skompilować silnik, a następnie uruchomić skrypt GUI.
 
 ### Wymagania
 * Kompilator wspierający C++17 (np. GCC 9+, Clang 10+, MSVC 2019+)
 * CMake 3.15+
+
 
 ### Instrukcja
 ```bash
@@ -38,5 +41,8 @@ mkdir build && cd build
 cmake ..
 cmake --build .
 
-# Uruchom silnik
-./ChessEngine
+# Zainstaluj wymagane biblioteki
+pip install -r requirements.txt
+
+# Uruchom
+python3 ./gui/main_gui.py
