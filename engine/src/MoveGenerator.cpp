@@ -569,10 +569,14 @@ bool isMoveLegal(Move m, Board& board) {
 
 int getGameResult(Board &board,const std::vector<Move> &moves)
 {
-    
-    int i = 0;
+    uint64_t sum = 0;
+    for(int i = 0; i < 12; ++i)
+    {
+        sum += board.pieceBB[i];
+    }
 
-    bool other_than_king = false;
+    if(sum - board.pieceBB[k] - board.pieceBB[K] == 0)
+        return STALEMATE;
 
     //sprawdzamy czy jakikolwiek ruch jest legalny, jeśli tak to gra się toczy
     for(const auto &move : moves)
@@ -582,9 +586,6 @@ int getGameResult(Board &board,const std::vector<Move> &moves)
             return IN_PROGRESS;
         }
     }
-
-    //if(!other_than_king)
-        //return STALEMATE;
 
     int king = 0;
 
