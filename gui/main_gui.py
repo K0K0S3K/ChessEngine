@@ -15,7 +15,8 @@ class App:
         self.display = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._board = Board(TILE_SIZE,MARGIN)
         self.pieces_data = []
-        self._engine = Engine('./engine/src/main')
+        self._engine = Engine('./build/ChessEngine')
+
 
         self._statemsg = ""
 
